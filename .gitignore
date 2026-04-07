@@ -1,0 +1,10 @@
+myenv/
+src/core/
+myenv_dstse/
+test.py
+test/
+
+data/
+models/
+arch/
+documents/

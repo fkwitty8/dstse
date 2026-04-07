@@ -1,0 +1,10 @@
+imbalanced-learn
+pandas
+numpy
+matplotlib
+seaborn
+scikit-learn
+pgmpy
+uvicorn 
+fastapi
+tabulate
