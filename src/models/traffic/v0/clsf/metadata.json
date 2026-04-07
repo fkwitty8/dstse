@@ -1,0 +1,36 @@
+{
+  "model_type": "classifier",
+  "num_categories": 3,
+  "categories": [
+    "Low",
+    "Normal",
+    "Very High"
+  ],
+  "thresholds": {
+    "low": 15.0,
+    "normal": 30.0
+  },
+  "feature_columns": [
+    "hour",
+    "day_of_week",
+    "is_weekend",
+    "is_rush_hour",
+    "month",
+    "road_Bombo Road",
+    "road_Northern Bypass",
+    "road_Sir Apolo Road",
+    "road_University Road"
+  ],
+  "congestion_mapping": {
+    "Low": 0,
+    "Normal": 1,
+    "Very high": 2
+  },
+  "accuracy": 0.7677331349206349,
+  "qwk": 0.7885591144673156,
+  "saved_date": "2026-03-20 20:11:47",
+  "data_range": {
+    "start": "2023-08-17 00:00:00",
+    "end": "2023-12-20 23:45:00"
+  }
+}

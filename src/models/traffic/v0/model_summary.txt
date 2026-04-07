@@ -1,0 +1,24 @@
+TRAFFIC MODEL COMPARISON SUMMARY
+==================================================
+
+Comparison Date: 2026-03-19 18:19:04
+Number of Categories: 3 (Low, Normal, Very High)
+Thresholds: Low < 15.00 | Normal 15.00-30.00 | Very High > 30.00
+
+Model Performance:
+------------------------------
+Random Forest Classifier:
+  - Accuracy: 0.7677
+  - QWK: 0.7886
+
+Random Forest Regressor+Map:
+  - Accuracy: 0.7144
+  - QWK: 0.7181
+
+LSTM:
+  - Accuracy: 0.5547
+  - QWK: 0.4132
+  - Status: not_saved
+
+WINNER: Random Forest
+   (based on Quadratic Weighted Kappa)

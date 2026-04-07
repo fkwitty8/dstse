@@ -1,0 +1,9 @@
+{
+  "model": "lstm",
+  "status": "not_saved",
+  "reason": "QWK 0.4132 < 0.7491 (95% of RF)",
+  "performance": {
+    "qwk": 0.41322269591053273,
+    "accuracy": 0.5547276039079317
+  }
+}

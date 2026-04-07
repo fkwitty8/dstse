@@ -1,0 +1,38 @@
+{
+  "model_type": "Regression+Map",
+  "num_categories": 4,
+  "categories": [
+    "No Rain",
+    "Light",
+    "Moderate",
+    "Heavy"
+  ],
+  "thresholds": {
+    "light": 1.4,
+    "moderate": 10.3
+  },
+  "feature_columns": [
+    "Dry bulb",
+    "Wet bulb",
+    "Humidity",
+    "Wind speed",
+    "dayofweek",
+    "hour",
+    "month",
+    "day",
+    "rainfall_lag_1",
+    "rainfall_lag_2",
+    "rainfall_lag_3",
+    "humidity_lag_1",
+    "humidity_lag_2",
+    "humidity_lag_3",
+    "drybulb_lag_1",
+    "drybulb_lag_2",
+    "drybulb_lag_3",
+    "rainfall_roll_3h",
+    "humidity_roll_3h",
+    "drybulb_roll_3h"
+  ],
+  "saved_date": "2026-03-24 08:43:17",
+  "description": "Random Forest regressor predicting log rainfall, mapped to categories"
+}
