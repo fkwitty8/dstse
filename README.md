@@ -16,53 +16,22 @@ The system is designed for high‑stakes institutional environments where decisi
 
 ## 🏗️ System Architecture
 
-────────────────────────────────────────────────────────────────────────────┐
-│ DSTSE SYSTEM ARCHITECTURE │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ │
-│ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ │
-│ │ Weather │ │ Traffic │ │ Timetable │ │
-│ │ Sensors │ │ Docks │ │ (Lectures) │ │
-│ └──────┬───────┘ └──────┬───────┘ └──────┬───────┘ │
-│ │ │ │ │
-│ ▼ ▼ ▼ │
-│ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ │
-│ │ Data │ │ Data │ │ Feature │ │
-│ │ Preprocessing│ │ Preprocessing│ │ Extraction │ │
-│ └──────┬───────┘ └──────┬───────┘ └──────┬───────┘ │
-│ │ │ │ │
-│ ▼ ▼ ▼ │
-│ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ │
-│ │ Random │ │ Random │ │ Lecture │ │
-│ │ Forest │ │ Forest │ │ Context │ │
-│ │ Regressor │ │ Classifier │ │ (Importance,│ │
-│ └──────┬───────┘ └──────┬───────┘ │ Location) │ │
-│ │ │ └──────┬───────┘ │
-│ ▼ ▼ │ │
-│ ┌──────────────┐ ┌──────────────┐ │ │
-│ │ Weather │ │ Traffic │ │ │
-│ │ Category │ │ Congestion │ │ │
-│ │ (Good/Mod/Bad)│ │ (Low/Norm/High)│ │ │
-│ └──────┬───────┘ └──────┬───────┘ │ │
-│ │ │ │ │
-│ └─────────┬─────────┘ │ │
-│ ▼ │ │
-│ ┌─────────────────────┐ │ │
-│ │ Bayesian Network │◄───────────────┘ │
-│ │ (Causal Reasoning)│ │
-│ └──────────┬──────────┘ │
-│ │ │
-│ ▼ │
-│ ┌─────────────────────┐ ┌──────────────┐ │
-│ │ Delay Probability │───►│ SVM │ │
-│ │ (0.0 – 1.0) │ │ Policy │ │
-│ └─────────────────────┘ │ Enforcer │ │
-│ └──────┬───────┘ │
-│ │ │
-│ ▼ │
-│ ┌─────────────────────────┐ │
-│ │ Final Decision │ │
-│ │ Scheduled | Online | │ │
-│ │ Rescheduled | Cancelled │ │
-│ └─────────────────────────┘ │
-└─────────────────────────────────────────────────────────────────────────────┘
+
+---
+
+## 📁 Project Structure
+src/
+├── features/
+│ ├── weather_predictor/ # Weather prediction microservice
+│ │ ├── domain/ # Entities, value objects, repositories
+│ │ ├── infrastructure/ # Data repositories, model loading
+│ │ ├── application/ # Use cases
+│ │ └── prsntn/ # FastAPI router, CLI client
+│ ├── traffic_predictor/ # Traffic prediction microservice
+│ │ └── ... (similar structure)
+│ └── decision_engine/ # Decision engine microservice
+│ └── ... (similar structure)
+├── models/ # Trained models (weather, traffic, BN, SVM)
+├── static/ # Frontend UI (HTML/CSS/JS)
+├── config.py # Configuration (paths, API URLs)
+└── main.py # (Optional) Monolithic entry point
