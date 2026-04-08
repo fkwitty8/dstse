@@ -146,6 +146,7 @@ For questions or collaboration, please open an issue on GitHub or contact the ma
 ```bash
 kiyimba.fahad@students.mak.ac.ug | kiyimbafwitty@gmail.com
 mushabe.moses@students.mak.ac.ug | mosesmushabe9@gmail.com
+ggaliwango.marvin@cit.ac.ug
 ```
 
 
