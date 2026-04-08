@@ -49,8 +49,7 @@ uvicorn features.decision_engine.prsntn.api:app --reload --port 82
 ### 📡 API Endpoints
 
 #### 1. Weather Service (http://localhost:80)
-
-
+```bash
 
 Endpoint	        Method	  Description
 /predict_weather	POST	    Predict weather category from atmospheric data
@@ -73,11 +72,9 @@ json
   "confidence": 0.7775,
   "rainfall_mm": 0.3115
 }
-
+```
 #### 2. Traffic Service (http://localhost:81)
-
-
-
+```bash
 Endpoint	        Method	  Description
 /predict_traffic	POST	    Predict congestion from datetime and road
 /health	          GET	      Health check
@@ -95,11 +92,9 @@ json
   "congestion": "Normal",
   "confidence": 0.96
 }
-
+```
 #### 3. Decision Service (http://localhost:82)
-
-
-
+```bash
 Endpoint	        Method	  Description
 /predict_decision	POST	    Final lecture decision from weather, traffic, importance
 /health	          GET	      Health check
@@ -128,7 +123,7 @@ json
   },
   "explanation": "Weather: Good (conf=0.78), Traffic: Normal (conf=0.96), Delay prob: 0.31, Importance: Normal"
 }
-
+```
 
 ### 🖥️ User Interface
 
