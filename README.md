@@ -144,6 +144,7 @@ https://docs/ui_screenshot.png
 ### 📧 Contact
 For questions or collaboration, please open an issue on GitHub or contact the maintainers.
 kiyimba.fahad@students.mak.ac.ug | kiyimbafwitty@gmail.com
+mushabe.moses@students.mak.ac.ug | mosesmushabe9@gmail.com
 
 
 
