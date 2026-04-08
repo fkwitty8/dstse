@@ -152,13 +152,14 @@ ggaliwango.marvin@cit.ac.ug
 
 ### 📚 Citation
 If you use this work in your research, please cite:
-
+```bash
 bibtex
-@software{dstse2025,
+@software{dstse2026,
   title = {DSTSE: Dynamic Spatio Temporal Synchronization Engine},
   author = {Kiyimba, fahad and Mushabe, Moses and Ggaliwango,Marvin},
   year = {2026},
   url = {https://github.com/fkwitty8/dstse},
 }
+```
 
 Built with ❤️ for smarter, data‑driven education in the Global South.
