@@ -1,22 +1,24 @@
+import os  # ADD THIS LINE
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import pandas as pd
 from datetime import datetime
-from ..domain.entities import Lecture
-from ..infrastructure.clients.weather_client import WeatherAPIClient
-from ..infrastructure.clients.traffic_client import TrafficAPIClient
-from ..infrastructure.bn_repository import FileBasedBNRepository
-from ..infrastructure.svm_policy import TrainedSVMPolicy
-from ..application.usecases.predict_lecture_status import PredictLectureStatusUseCase
-from ..domain.entities import LectureDecision
-from ....config import WEATHER_API_URL, TRAFFIC_API_URL, BN_MODEL_DIR, SVM_MODEL_DIR
+from domain.entities import Lecture
+from infrastructure.clients.weather_client import WeatherAPIClient
+from infrastructure.clients.traffic_client import TrafficAPIClient
+from infrastructure.bn_repository import FileBasedBNRepository
+from infrastructure.svm_policy import TrainedSVMPolicy
+from application.usecases.predict_lecture_status import PredictLectureStatusUseCase
+from domain.entities import LectureDecision
+from config import WEATHER_API_URL, TRAFFIC_API_URL, BN_MODEL_DIR, SVM_MODEL_DIR
 
 app = FastAPI(title="Lecture Decision Engine Service", version="1.0")
 
+# MODIFY THIS CORS BLOCK - use environment variable
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5500","http://127.0.0.1:5500","http://10.149.6.46:5500"],   
+    allow_origins=os.getenv("ALLOWED_ORIGINS", "http://localhost:5500,http://127.0.0.1:5500").split(","),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -55,3 +57,8 @@ async def predict_lecture_status(request: LectureDecisionRequest):
     )
     result = use_case.execute(lecture)
     return result
+
+# OPTIONAL: Add health check
+@app.get("/health")
+async def health():
+    return {"status": "ok"}

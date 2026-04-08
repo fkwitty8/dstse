@@ -1,0 +1,61 @@
+services:
+  # Weather Predictor Service
+  - type: web
+    name: dstse-weather
+    runtime: python
+    rootDirectory: src
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn features.weather_predictor.prsntn.api:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHONPATH
+        value: /opt/render/project/src/src
+      - key: WEATHER_MODEL_DIR
+        value: /opt/render/project/src/src/models/weather
+      - key: WEATHER_DATA_PATH
+        value: /opt/render/project/src/src/data/weather
+
+  # Traffic Predictor Service
+  - type: web
+    name: dstse-traffic
+    runtime: python
+    rootDirectory: src
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn features.traffic_predictor.prsntn.api:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHONPATH
+        value: /opt/render/project/src/src
+      - key: TRAFFIC_MODEL_DIR
+        value: /opt/render/project/src/src/models/traffic
+      - key: TRAFFIC_DATA_PATH
+        value: /opt/render/project/src/src/data/traffic
+
+  # Decision Engine Service
+  - type: web
+    name: dstse-decision
+    runtime: python
+    rootDirectory: src
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn features.decision_engine.prsntn.api:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHONPATH
+        value: /opt/render/project/src/src
+      - key: WEATHER_SERVICE_URL
+        value: https://dstse-weather.onrender.com
+      - key: TRAFFIC_SERVICE_URL
+        value: https://dstse-traffic.onrender.com
+      - key: BN_MODEL_DIR
+        value: /opt/render/project/src/src/models/bn
+      - key: SVM_MODEL_DIR
+        value: /opt/render/project/src/src/models/svm
+      - key: ALLOWED_ORIGINS
+        value: https://dstse-ui.onrender.com,http://localhost:5500
+
+  # UI Service (stays in root)
+  - type: web
+    name: dstse-ui
+    runtime: python
+    buildCommand: pip install -r src/requirements.txt
+    startCommand: uvicorn ui_app:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DECISION_ENGINE_URL
+        value: https://dstse-decision.onrender.com
