@@ -1,5 +1,4 @@
-# DSTSE - Dynamic Scheduling and Traffic-Synchronized Education
-
+# DSTSE - Dynamic Spatio- Temporal Synchronisation Engine
 
 
 ## 📌 Overview
@@ -12,26 +11,18 @@ The **Dynamic Scheduling and Traffic-Synchronized Education (DSTSE)** system is 
 
 The system is designed for high‑stakes institutional environments where decisions must be both accurate and explainable.
 
----
-
-## 🏗️ System Architecture
+### Setup
 
 
----
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/dstse.git
+cd dstse
 
-## 📁 Project Structure
-src/
-├── features/
-│ ├── weather_predictor/ # Weather prediction microservice
-│ │ ├── domain/ # Entities, value objects, repositories
-│ │ ├── infrastructure/ # Data repositories, model loading
-│ │ ├── application/ # Use cases
-│ │ └── prsntn/ # FastAPI router, CLI client
-│ ├── traffic_predictor/ # Traffic prediction microservice
-│ │ └── ... (similar structure)
-│ └── decision_engine/ # Decision engine microservice
-│ └── ... (similar structure)
-├── models/ # Trained models (weather, traffic, BN, SVM)
-├── static/ # Frontend UI (HTML/CSS/JS)
-├── config.py # Configuration (paths, API URLs)
-└── main.py # (Optional) Monolithic entry point
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate      # Linux/Mac
+venv\Scripts\activate         # Windows
+
+# Install dependencies
+pip install -r requirements.txt
