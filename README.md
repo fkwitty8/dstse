@@ -48,7 +48,7 @@ uvicorn features.decision_engine.prsntn.api:app --reload --port 82
 
 ### 📡 API Endpoints
 
-# Weather Service (http://localhost:80)
+#### Weather Service (http://localhost:80)
 
 Endpoint	        Method	  Description
 /predict_weather	POST	    Predict weather category from atmospheric data
@@ -72,7 +72,7 @@ json
   "rainfall_mm": 0.3115
 }
 
-# Traffic Service (http://localhost:81)
+#### Traffic Service (http://localhost:81)
 
 Endpoint	        Method	  Description
 /predict_traffic	POST	    Predict congestion from datetime and road
@@ -92,7 +92,7 @@ json
   "confidence": 0.96
 }
 
-# Decision Service (http://localhost:82)
+#### Decision Service (http://localhost:82)
 
 Endpoint	        Method	  Description
 /predict_decision	POST	    Final lecture decision from weather, traffic, importance
@@ -129,17 +129,17 @@ Access the web UI at http://localhost:5500 (if using Live Server).
 
 https://docs/ui_screenshot.png
 
-###🙏 Acknowledgements
+### 🙏 Acknowledgements
 
 **Mr Ggaliwango Marvin** – For providing the use case, guidance and domain expertise 
 **Bike Share Makerere University** - For Providing us with realistic traffic and weather data
 **Open Source Libraries** – FastAPI, pgmpy, scikit‑learn, pandas, numpy
 
-###📧 Contact
+### 📧 Contact
 For questions or collaboration, please open an issue on GitHub or contact the maintainers.
 kiyimba.fahad@students.mak.ac.ug | kiyimbafwitty@gmail.com
 
-###📚 Citation
+### 📚 Citation
 If you use this work in your research, please cite:
 
 bibtex
