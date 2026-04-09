@@ -162,4 +162,4 @@ bibtex
 }
 ```
 
-Built with ❤️ for smarter, data‑driven education in the Global South.
+Built with ❤️ for smarter, data‑driven education Time table scheduling in Uganda in Makerere University Context .
