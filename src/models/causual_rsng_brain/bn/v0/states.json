@@ -1,0 +1,23 @@
+{
+  "Weather": [
+    "Good",
+    "Moderate",
+    "Bad"
+  ],
+  "Traffic": [
+    "Low",
+    "Normal",
+    "Heavy"
+  ],
+  "Delay": [
+    "NoDelay",
+    "ShortDelay",
+    "LongDelay"
+  ],
+  "Decision": [
+    "Scheduled",
+    "Online",
+    "Rescheduled",
+    "Cancelled"
+  ]
+}

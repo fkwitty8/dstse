@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  weather:
+    build:
+      context: .
+      dockerfile: Dockerfile.weather
+    ports:
+      - "80:7860"
+    environment:
+      - PORT=7860
+    networks:
+      - dstse-network
+    restart: unless-stopped
+
+  traffic:
+    build:
+      context: .
+      dockerfile: Dockerfile.traffic
+    ports:
+      - "81:7860"
+    environment:
+      - PORT=7860
+    networks:
+      - dstse-network
+    restart: unless-stopped
+
+  decision:
+    build:
+      context: .
+      dockerfile: Dockerfile.decision
+    ports:
+      - "82:7860"
+    environment:
+      - PORT=7860
+      - WEATHER_API_URL=http://src-weather-1:7860
+      - TRAFFIC_API_URL=http://src-traffic-1:7860
+      
+    networks:
+      - dstse-network
+    depends_on:
+      - weather
+      - traffic
+    restart: unless-stopped
+
+  ui:
+    build:
+      context: .
+      dockerfile: Dockerfile.lecturer_ui
+    ports:
+      - "8080:80"
+    networks:
+      - dstse-network
+    depends_on:
+      - decision
+
+
+networks:
+  dstse-network:
+    driver: bridge

@@ -1,0 +1,22 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy only weather-specific files
+
+# Copy weather data files needed for the model timelags computtionn and feature engineering
+COPY data/feature_store/reg_ts_categorised_weather_data_with_features.csv ./data/feature_store/
+
+COPY features/weather_predictor ./features/weather_predictor
+COPY models/weather ./models/weather
+COPY config.py .
+
+
+ENV PYTHONPATH=/app
+
+# Hugging Face requires port 7860
+CMD ["uvicorn", "features.weather_predictor.prsntn.api:app", "--host", "0.0.0.0", "--port", "7860"]

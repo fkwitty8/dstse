@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSTSE — Lecture Intelligence Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ink:#1a1a2e;--ink2:#4a4a6a;--ink3:#8888aa;
+  --surface:#ffffff;--surface2:#f5f4f0;--surface3:#ede9e0;
+  --accent:#0f52ba;--accent2:#e07b39;--accent3:#2e9c4a;
+  --danger:#c0392b;--warn:#d68910;
+  --border:rgba(0,0,0,0.09);--border2:rgba(0,0,0,0.16);
+  --r:14px;--r2:10px;--r3:6px;
+  --sh:0 2px 16px rgba(0,0,0,0.07),0 0 0 1px rgba(0,0,0,0.04);
+}
+body{font-family:'DM Sans',-apple-system,sans-serif;background:#f0ede6;color:var(--ink);min-height:100vh}
+
+/* NAV */
+.topbar{background:var(--ink);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:100}
+.topbar-brand{display:flex;align-items:center;gap:10px;color:#fff}
+.topbar-brand .logo{width:32px;height:32px;background:linear-gradient(135deg,#3a7bd5,#e07b39);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.topbar-brand h1{font-family:'Instrument Serif',serif;font-size:1.25rem;font-weight:400;letter-spacing:0.01em}
+.topbar-brand span{font-size:11px;color:rgba(255,255,255,0.45);font-weight:300}
+.topbar-right{display:flex;align-items:center;gap:16px}
+.topbar-right .notif-dot{width:8px;height:8px;background:#e07b39;border-radius:50%;position:absolute;top:2px;right:2px}
+.topbar-btn{position:relative;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:#fff;border-radius:8px;padding:6px 14px;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:background 0.15s}
+.topbar-btn:hover{background:rgba(255,255,255,0.18)}
+.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#3a7bd5,#2e9c4a);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:500;cursor:pointer}
+.date-chip{color:rgba(255,255,255,0.55);font-size:12px;font-weight:300}
+
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:260px 1fr;min-height:calc(100vh - 58px)}
+
+/* SIDEBAR */
+.sidebar{background:#fff;border-right:1px solid var(--border);padding:1.5rem 0;overflow-y:auto}
+.sidebar-section{margin-bottom:1.5rem}
+.sidebar-label{font-size:10px;font-weight:500;letter-spacing:1.2px;color:var(--ink3);text-transform:uppercase;padding:0 1.25rem;margin-bottom:0.5rem}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 1.25rem;cursor:pointer;font-size:13.5px;color:var(--ink2);border-radius:0;transition:all 0.12s;position:relative}
+.nav-item:hover{background:#f5f4f0;color:var(--ink)}
+.nav-item.active{background:linear-gradient(90deg,#e8f0fe,transparent);color:var(--accent);font-weight:500}
+.nav-item.active::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:3px;background:var(--accent);border-radius:0 3px 3px 0}
+.nav-icon{width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:15px;opacity:0.7}
+.nav-badge{margin-left:auto;background:#e07b39;color:#fff;font-size:10px;padding:2px 6px;border-radius:20px;font-weight:500}
+
+.sidebar-weather{margin:0 1rem 1rem;background:linear-gradient(135deg,#1a1a2e,#0f52ba);border-radius:12px;padding:1rem;color:#fff}
+.weather-top{display:flex;justify-content:space-between;align-items:flex-start}
+.weather-temp{font-size:2rem;font-weight:300;font-family:'Instrument Serif',serif}
+.weather-desc{font-size:11px;color:rgba(255,255,255,0.6);margin-top:2px}
+.weather-icon{font-size:32px}
+.weather-details{display:flex;gap:12px;margin-top:12px;font-size:11px;color:rgba(255,255,255,0.65)}
+.weather-details span{display:flex;flex-direction:column;gap:2px}
+.weather-details b{font-size:12px;color:#fff;font-weight:500}
+.weather-alert{margin-top:10px;background:rgba(224,123,57,0.25);border:1px solid rgba(224,123,57,0.4);border-radius:6px;padding:6px 8px;font-size:11px;color:#f4c08a}
+
+/* MAIN */
+.main{overflow-y:auto;padding:2rem}
+
+/* TABS */
+.tabs{display:flex;gap:4px;margin-bottom:1.75rem;background:#fff;border-radius:10px;padding:5px;box-shadow:var(--sh);width:fit-content}
+.tab{padding:8px 18px;border-radius:7px;font-size:13.5px;cursor:pointer;color:var(--ink2);font-weight:400;transition:all 0.15s;white-space:nowrap}
+.tab.active{background:var(--ink);color:#fff;font-weight:500}
+
+/* PAGE TITLE */
+.page-title{margin-bottom:1.5rem}
+.page-title h2{font-family:'Instrument Serif',serif;font-size:1.6rem;font-weight:400;color:var(--ink)}
+.page-title p{font-size:13px;color:var(--ink3);margin-top:3px}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+.stat-card{background:#fff;border-radius:var(--r2);padding:1rem 1.25rem;box-shadow:var(--sh)}
+.stat-card .s-label{font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:0.8px;font-weight:500;margin-bottom:6px}
+.stat-card .s-val{font-size:1.6rem;font-weight:300;font-family:'Instrument Serif',serif;color:var(--ink);line-height:1}
+.stat-card .s-sub{font-size:11px;color:var(--ink3);margin-top:5px;display:flex;align-items:center;gap:4px}
+.s-up{color:var(--accent3)}
+.s-down{color:var(--danger)}
+
+/* TIMETABLE */
+.timetable-card{background:#fff;border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;margin-bottom:1.5rem}
+.timetable-header{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.timetable-header h3{font-size:14px;font-weight:500;color:var(--ink)}
+.date-nav{display:flex;align-items:center;gap:10px}
+.date-nav button{background:none;border:1px solid var(--border2);padding:5px 10px;border-radius:6px;cursor:pointer;font-size:12px;color:var(--ink2);font-family:'DM Sans',sans-serif;transition:all 0.12s}
+.date-nav button:hover{background:var(--surface2)}
+.date-nav .cur-date{font-size:13px;font-weight:500;color:var(--ink);min-width:120px;text-align:center}
+
+/* LECTURE ROW */
+.lecture-list{padding:0}
+.lecture-row{display:grid;grid-template-columns:80px 1fr auto;align-items:center;gap:1rem;padding:1rem 1.5rem;border-bottom:1px solid var(--border);transition:background 0.12s;cursor:pointer}
+.lecture-row:last-child{border-bottom:none}
+.lecture-row:hover{background:#fafaf8}
+.lecture-row.next-up{background:linear-gradient(90deg,#eff4ff,transparent)}
+.time-col{text-align:center}
+.time-col .time{font-size:13px;font-weight:500;color:var(--ink)}
+.time-col .dur{font-size:11px;color:var(--ink3)}
+.lec-info .course-name{font-size:14px;font-weight:500;color:var(--ink);margin-bottom:2px}
+.lec-info .meta{font-size:12px;color:var(--ink3);display:flex;gap:10px;align-items:center}
+.lec-info .meta span{display:flex;align-items:center;gap:3px}
+.lec-actions{display:flex;align-items:center;gap:8px}
+.status-pill{font-size:11px;font-weight:500;padding:4px 10px;border-radius:20px}
+.pill-green{background:#e8f5e9;color:#2e7d32}
+.pill-orange{background:#fff3e0;color:#e65100}
+.pill-red{background:#ffebee;color:#c62828}
+.pill-blue{background:#e3f2fd;color:#1565c0}
+.pill-gray{background:#f0f0f0;color:#555}
+.pill-amber{background:#fffde7;color:#f57f17}
+.btn-analyze{background:var(--accent);color:#fff;border:none;padding:7px 14px;border-radius:8px;font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.15s;white-space:nowrap}
+.btn-analyze:hover{background:#0b3d8a;transform:translateY(-1px)}
+.next-badge{font-size:10px;font-weight:500;background:var(--accent);color:#fff;padding:3px 7px;border-radius:4px;letter-spacing:0.3px}
+
+/* ANALYSIS PANEL */
+.analysis-panel{background:#fff;border-radius:var(--r);box-shadow:var(--sh);margin-bottom:1.5rem;overflow:hidden}
+.panel-header{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:flex-start}
+.panel-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.panel-header-info h3{font-size:14px;font-weight:500;margin-bottom:2px}
+.panel-header-info p{font-size:12px;color:var(--ink3)}
+.panel-body{padding:1.5rem}
+
+/* ANALYSIS FORM */
+.analysis-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.25rem}
+.analysis-grid.two-col{grid-template-columns:repeat(2,1fr)}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.6px;color:var(--ink3)}
+.form-group input,.form-group select{padding:9px 12px;border:1px solid var(--border2);border-radius:8px;font-size:13.5px;font-family:'DM Sans',sans-serif;color:var(--ink);background:#fff;transition:border-color 0.15s}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(15,82,186,0.1)}
+.btn-primary{background:var(--ink);color:#fff;border:none;padding:10px 24px;border-radius:10px;font-size:13.5px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:8px}
+.btn-primary:hover{background:#2a2a4e;transform:translateY(-1px)}
+.btn-primary:disabled{background:#ccc;cursor:not-allowed;transform:none}
+.btn-secondary{background:#fff;color:var(--ink2);border:1px solid var(--border2);padding:10px 20px;border-radius:10px;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.15s}
+.btn-secondary:hover{background:var(--surface2)}
+
+/* RESULT */
+.result-section{margin-top:1.25rem;padding:1.25rem;background:var(--surface2);border-radius:10px;border-left:3px solid var(--accent)}
+.result-decision{font-family:'Instrument Serif',serif;font-size:1.4rem;margin-bottom:0.75rem}
+.prob-bars{display:flex;flex-direction:column;gap:8px;margin-bottom:1rem}
+.prob-bar-row{display:grid;grid-template-columns:100px 1fr 48px;align-items:center;gap:10px;font-size:12px}
+.prob-bar-row label{color:var(--ink2)}
+.bar-track{height:6px;background:#e0ddd7;border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;transition:width 0.6s ease}
+.explanation-text{font-size:13px;color:var(--ink2);line-height:1.7;background:#fff;padding:12px 14px;border-radius:8px}
+
+/* NOTIFICATION PANEL */
+.notif-composer{background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:1.5rem;margin-bottom:1.5rem}
+.notif-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem}
+.notif-header h3{font-size:14px;font-weight:500}
+.recipients-row{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap}
+.recipient-chip{display:flex;align-items:center;gap:5px;background:#eef2ff;color:#3949ab;border-radius:20px;padding:4px 10px;font-size:12px;font-weight:500}
+.notif-preview{background:#1a1a2e;color:#e8e8f0;border-radius:10px;padding:14px;font-size:13px;line-height:1.6;margin-bottom:1rem;font-family:'DM Sans',sans-serif}
+.notif-preview .noti-from{font-size:10px;color:#666;margin-bottom:8px;letter-spacing:0.5px}
+.notif-preview .noti-title{font-weight:500;margin-bottom:6px}
+.notif-channels{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap}
+.channel-toggle{display:flex;align-items:center;gap:6px;padding:7px 12px;border:1px solid var(--border2);border-radius:8px;cursor:pointer;font-size:12px;color:var(--ink2);transition:all 0.12s}
+.channel-toggle.active{background:#e8f0fe;border-color:#a8c3f7;color:var(--accent)}
+.send-row{display:flex;gap:10px;align-items:center}
+
+/* SCHEDULE SUGGESTION */
+.reschedule-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1rem}
+.sched-option{border:1.5px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;transition:all 0.12s;position:relative}
+.sched-option:hover{border-color:#a8c3f7;background:#f5f8ff}
+.sched-option.selected{border-color:var(--accent);background:#eff4ff}
+.sched-option .day{font-size:12px;font-weight:500;color:var(--ink);margin-bottom:4px}
+.sched-option .time-range{font-size:11px;color:var(--ink3);margin-bottom:6px}
+.sched-option .score-row{display:flex;gap:5px}
+.score-tag{font-size:10px;padding:2px 7px;border-radius:4px}
+.tag-green{background:#e8f5e9;color:#2e7d32}
+.tag-amber{background:#fffde7;color:#f57f17}
+.tag-blue{background:#e3f2fd;color:#1565c0}
+.score-badge{position:absolute;top:8px;right:8px;font-size:10px;font-weight:500;color:var(--ink3)}
+
+/* MEET LINK */
+.meet-box{background:linear-gradient(135deg,#e8f0fe,#eff4ff);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:14px;margin-bottom:1rem}
+.meet-logo{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;background:#fff}
+.meet-info .meet-title{font-size:13px;font-weight:500;color:var(--ink)}
+.meet-info .meet-link{font-size:12px;color:var(--accent);font-family:monospace;margin-top:2px}
+.meet-actions{margin-left:auto;display:flex;gap:8px}
+.btn-copy{background:#fff;border:1px solid var(--border2);padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;color:var(--ink2);font-family:'DM Sans',sans-serif;transition:all 0.12s}
+.btn-copy:hover{background:var(--surface2)}
+
+/* FEEDBACK MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem}
+.modal{background:#fff;border-radius:16px;padding:2rem;max-width:460px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,0.2)}
+.modal h3{font-family:'Instrument Serif',serif;font-size:1.3rem;margin-bottom:0.5rem}
+.modal p{font-size:13px;color:var(--ink2);margin-bottom:1.25rem;line-height:1.6}
+.feedback-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:1.25rem}
+.feedback-opt{border:1px solid var(--border2);border-radius:10px;padding:10px 14px;cursor:pointer;font-size:13px;color:var(--ink2);transition:all 0.12s;display:flex;align-items:center;gap:10px}
+.feedback-opt:hover{background:var(--surface2);border-color:#bbb}
+.feedback-opt.selected{border-color:var(--accent);background:#eff4ff;color:var(--accent)}
+.feedback-icon{font-size:18px}
+.modal-footer{display:flex;gap:10px;justify-content:flex-end}
+
+/* HISTORY */
+.history-table{width:100%;border-collapse:collapse;font-size:13px}
+.history-table th{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.6px;color:var(--ink3);padding:10px 14px;border-bottom:1px solid var(--border);text-align:left}
+.history-table td{padding:11px 14px;border-bottom:1px solid var(--border);color:var(--ink2)}
+.history-table tr:last-child td{border-bottom:none}
+.history-table tr:hover td{background:#fafaf8}
+
+/* TOAST */
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--ink);color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;z-index:300;animation:slideUp 0.3s ease;display:flex;align-items:center;gap:8px;box-shadow:0 8px 32px rgba(0,0,0,0.2)}
+.toast-icon{font-size:16px}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* SPINNER */
+.spin{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-radius:50%;border-top-color:#fff;animation:s 0.6s linear infinite}
+@keyframes s{to{transform:rotate(360deg)}}
+
+/* EMPTY STATE */
+.empty-state{padding:3rem;text-align:center;color:var(--ink3)}
+.empty-state .es-icon{font-size:40px;margin-bottom:1rem;opacity:0.5}
+.empty-state p{font-size:13px}
+
+/* SECTION CARDS */
+.section-card{background:#fff;border-radius:var(--r);box-shadow:var(--sh);margin-bottom:1.5rem;overflow:hidden}
+.sc-header{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.sc-header h3{font-size:14px;font-weight:500}
+.sc-body{padding:1.5rem}
+
+/* PAGE HIDDEN */
+.page{display:none}
+.page.active{display:block}
+
+/* Responsive */
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .analysis-grid{grid-template-columns:1fr 1fr}
+  .reschedule-grid{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .stats-row{grid-template-columns:1fr 1fr}
+  .analysis-grid{grid-template-columns:1fr}
+  .main{padding:1rem}
+}
+
+.loader-bar{height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;animation:lb 1.2s ease infinite;width:60%;margin:0 auto 1rem}
+@keyframes lb{0%{width:0%}50%{width:80%}100%{width:100%}}
+
+.divider{border:none;border-top:1px solid var(--border);margin:1.25rem 0}
+
+.link-pill{display:inline-flex;align-items:center;gap:5px;background:#e3f2fd;color:#1565c0;padding:4px 10px;border-radius:6px;font-size:12px;font-family:monospace;cursor:pointer}
+
+.highlight-row{background:linear-gradient(90deg,#fffde7,transparent) !important}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="logo">🎓</div>
+    <div>
+      <h1>DSTSE</h1>
+      <span>Lecture Intelligence Platform</span>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <span class="date-chip" id="topDate"></span>
+    <button class="topbar-btn" onclick="showToast('🔔 Notifications sent to all subscribers','success')">
+      <span class="notif-dot"></span>
+      Notifications
+    </button>
+    <div class="avatar" title="Dr. Nakato Amara">NA</div>
+  </div>
+</div>
+
+<div class="layout">
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-weather" id="sideWeather">
+    <div class="weather-top">
+      <div>
+        <div class="weather-temp">23°C</div>
+        <div class="weather-desc">Kampala — Partly Cloudy</div>
+      </div>
+      <div class="weather-icon">⛅</div>
+    </div>
+    <div class="weather-details">
+      <span><div>Humidity</div><b>74%</b></span>
+      <span><div>Wind</div><b>6 m/s</b></span>
+      <span><div>Feels</div><b>21°C</b></span>
+    </div>
+    <div class="weather-alert" id="weatherAlert">⚠️ Rain expected 08:00–10:00. High disruption risk on Bombo Road.</div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">Navigation</div>
+    <div class="nav-item active" onclick="switchPage('dashboard',this)"><span class="nav-icon">📅</span> Today's Schedule <span class="nav-badge">3</span></div>
+    <div class="nav-item" onclick="switchPage('analyze',this)"><span class="nav-icon">🧠</span> Analyze Lecture</div>
+    <div class="nav-item" onclick="switchPage('notify',this)"><span class="nav-icon">📢</span> Notifications <span class="nav-badge">2</span></div>
+    <div class="nav-item" onclick="switchPage('history',this)"><span class="nav-icon">📊</span> History & Insights</div>
+    <div class="nav-item" onclick="switchPage('settings',this)"><span class="nav-icon">⚙️</span> Settings</div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">Quick Status</div>
+    <div class="nav-item"><span class="nav-icon">🌧️</span> Rain Risk <span style="margin-left:auto;color:#e07b39;font-size:12px;font-weight:500">High</span></div>
+    <div class="nav-item"><span class="nav-icon">🚦</span> Traffic <span style="margin-left:auto;color:#d68910;font-size:12px;font-weight:500">Moderate</span></div>
+    <div class="nav-item"><span class="nav-icon">📡</span> API Status <span style="margin-left:auto;color:#2e9c4a;font-size:12px;font-weight:500">Online</span></div>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+<!-- ===== PAGE: DASHBOARD ===== -->
+<div class="page active" id="page-dashboard">
+  <div class="page-title">
+    <h2>Today's Lecture Schedule</h2>
+    <p>Thursday, <span id="fullDate"></span> — Makerere University, Kampala</p>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="s-label">Lectures Today</div>
+      <div class="s-val">4</div>
+      <div class="s-sub"><span class="s-up">↑</span> 1 more than usual</div>
+    </div>
+    <div class="stat-card">
+      <div class="s-label">At Risk</div>
+      <div class="s-val" style="color:#c0392b">2</div>
+      <div class="s-sub"><span class="s-down">⚠</span> Weather + traffic flags</div>
+    </div>
+    <div class="stat-card">
+      <div class="s-label">Students Notified</div>
+      <div class="s-val" style="color:#2e9c4a">87</div>
+      <div class="s-sub"><span class="s-up">✓</span> All 3 courses sent</div>
+    </div>
+    <div class="stat-card">
+      <div class="s-label">Cancelations (week)</div>
+      <div class="s-val">1</div>
+      <div class="s-sub"><span class="s-down">↓</span> OS lecture Mon</div>
+    </div>
+  </div>
+
+  <div class="timetable-card">
+    <div class="timetable-header">
+      <h3>Lecture Timetable</h3>
+      <div class="date-nav">
+        <button onclick="shiftDay(-1)">◀</button>
+        <div class="cur-date" id="navDate"></div>
+        <button onclick="shiftDay(1)">▶</button>
+      </div>
+    </div>
+    <div class="lecture-list" id="lectureList"></div>
+  </div>
+</div>
+
+<!-- ===== PAGE: ANALYZE ===== -->
+<div class="page" id="page-analyze">
+  <div class="page-title">
+    <h2>Lecture Decision Analysis</h2>
+    <p>Enter parameters and get an AI-powered scheduling decision with Bayesian reasoning</p>
+  </div>
+
+  <div class="analysis-panel">
+    <div class="panel-header">
+      <div class="panel-icon" style="background:#e8f0fe">🧠</div>
+      <div class="panel-header-info">
+        <h3>Decision Parameters</h3>
+        <p>Weather conditions, road, time and importance are considered</p>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="analysis-grid">
+        <div class="form-group">
+          <label>Date & Time</label>
+          <input type="datetime-local" id="a_datetime">
+        </div>
+        <div class="form-group">
+          <label>Road / Route</label>
+          <select id="a_road">
+            <option value="Bombo Road">Bombo Road</option>
+            <option value="Northern Bypass">Northern Bypass</option>
+            <option value="Sir Apolo Road">Sir Apolo Road</option>
+            <option value="University Road">University Road</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Importance</label>
+          <select id="a_importance">
+            <option value="Normal">Normal</option>
+            <option value="Important">Important</option>
+            <option value="Critical">Critical</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Dry Bulb Temp (°C)</label>
+          <input type="number" id="a_dry" value="25.0" step="0.1">
+        </div>
+        <div class="form-group">
+          <label>Wet Bulb Temp (°C)</label>
+          <input type="number" id="a_wet" value="20.0" step="0.1">
+        </div>
+        <div class="form-group">
+          <label>Humidity (%)</label>
+          <input type="number" id="a_humidity" value="74" step="1">
+        </div>
+      </div>
+      <div class="analysis-grid two-col" style="margin-bottom:1.25rem">
+        <div class="form-group">
+          <label>Wind Speed (m/s)</label>
+          <input type="number" id="a_wind" value="5.0" step="0.5">
+        </div>
+        <div class="form-group">
+          <label>Course</label>
+          <select id="a_course">
+            <option value="Operating Systems">Operating Systems</option>
+            <option value="Database Systems">Database Systems</option>
+            <option value="Data Structures">Data Structures</option>
+            <option value="Computer Networks">Computer Networks</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="btn-primary" id="analyzeBtn" onclick="runAnalysis()">
+          <span>Analyze Lecture</span>
+        </button>
+        <button class="btn-secondary" onclick="prefillFromTimetable()">Load from Timetable</button>
+      </div>
+
+      <div id="analysisResult" style="display:none">
+        <hr class="divider">
+        <div class="result-section" id="resultSection">
+          <div id="resultLoading" style="text-align:center;padding:1rem">
+            <div class="loader-bar"></div>
+            <div style="font-size:13px;color:var(--ink3)">Fetching weather data and running Bayesian inference...</div>
+          </div>
+          <div id="resultContent" style="display:none">
+            <div class="result-decision" id="resultDecision"></div>
+            <div class="prob-bars" id="probBars"></div>
+            <div class="explanation-text" id="resultExplanation"></div>
+            <div style="margin-top:1rem;display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn-primary" id="btnNotifyFromResult" style="display:none" onclick="openNotifyFromResult()">📢 Notify Students</button>
+              <button class="btn-secondary" id="btnReschedule" style="display:none" onclick="switchPage('notify',null);showReschedule()">📅 Suggest Reschedule</button>
+              <button class="btn-secondary" id="btnMeet" style="display:none" onclick="switchPage('notify',null);showMeetGen()">📹 Generate Meeting Link</button>
+              <button class="btn-secondary" onclick="openFeedback()">💬 Provide Feedback</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE: NOTIFY ===== -->
+<div class="page" id="page-notify">
+  <div class="page-title">
+    <h2>Student Notifications</h2>
+    <p>Compose, review and send lecture status updates to your students</p>
+  </div>
+
+  <!-- MEET LINK SECTION (simulated) -->
+  <div class="section-card" id="meetSection" style="display:none">
+    <div class="sc-header"><h3>📹 Meeting Link Generator <span style="font-size:11px;background:#e8f5e9;color:#2e7d32;padding:2px 8px;border-radius:4px;margin-left:8px">Simulated</span></h3></div>
+    <div class="sc-body">
+      <p style="font-size:13px;color:var(--ink2);margin-bottom:1rem">When a lecture is moved online, DSTSE generates a meeting link with the proper course title, time, and waiting room settings.</p>
+      <div class="analysis-grid two-col" style="margin-bottom:1rem">
+        <div class="form-group">
+          <label>Platform</label>
+          <select id="meetPlatform">
+            <option>Google Meet</option>
+            <option>Zoom</option>
+            <option>Microsoft Teams</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Course</label>
+          <select id="meetCourse">
+            <option>Operating Systems</option>
+            <option>Database Systems</option>
+            <option>Data Structures</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="generateMeetLink()">Generate Link</button>
+      <div id="meetLinkResult" style="display:none;margin-top:1rem">
+        <div class="meet-box">
+          <div class="meet-logo" id="meetLogo">📹</div>
+          <div class="meet-info">
+            <div class="meet-title" id="meetTitle">Operating Systems — Online Session</div>
+            <div class="meet-link" id="meetLinkText">meet.google.com/abc-defg-hij</div>
+          </div>
+          <div class="meet-actions">
+            <button class="btn-copy" onclick="showToast('✓ Link copied to clipboard','success')">Copy</button>
+            <button class="btn-copy" onclick="showToast('📨 Link sent to 34 students','success')">Share</button>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--ink3)">✓ Waiting room enabled &nbsp;·&nbsp; ✓ Recording will start automatically &nbsp;·&nbsp; ✓ Calendar invites sent</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESCHEDULE SECTION (simulated) -->
+  <div class="section-card" id="reschedSection" style="display:none">
+    <div class="sc-header"><h3>📅 Smart Reschedule Suggestions <span style="font-size:11px;background:#e8f5e9;color:#2e7d32;padding:2px 8px;border-radius:4px;margin-left:8px">Simulated</span></h3></div>
+    <div class="sc-body">
+      <p style="font-size:13px;color:var(--ink2);margin-bottom:1rem">DSTSE analyzes both lecturer and student calendars, historical attendance, exam proximity, and weather forecasts to suggest the best reschedule slots.</p>
+      <div class="reschedule-grid" id="reschedGrid"></div>
+      <div style="display:flex;gap:10px">
+        <button class="btn-primary" onclick="confirmReschedule()">Confirm & Notify</button>
+        <button class="btn-secondary" onclick="document.getElementById('reschedSection').style.display='none'">Dismiss</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTIFICATION COMPOSER -->
+  <div class="notif-composer">
+    <div class="notif-header">
+      <h3>Compose Notification</h3>
+      <div style="display:flex;gap:8px">
+        <button class="btn-secondary" style="font-size:12px;padding:6px 12px" onclick="autoCompose()">✨ Auto-Compose</button>
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-bottom:1rem">
+      <label>Course</label>
+      <select id="n_course" onchange="updateCompose()">
+        <option>Operating Systems</option>
+        <option>Database Systems</option>
+        <option>Data Structures</option>
+        <option>Computer Networks</option>
+      </select>
+    </div>
+
+    <div class="form-group" style="margin-bottom:1rem">
+      <label>Status Update</label>
+      <select id="n_status" onchange="updateCompose()">
+        <option value="cancelled">Cancelled — Heavy rain disruption</option>
+        <option value="online">Moving Online</option>
+        <option value="rescheduled">Rescheduled</option>
+        <option value="confirmed">Confirmed — Lecture proceeding</option>
+      </select>
+    </div>
+
+    <div class="form-group" style="margin-bottom:1rem">
+      <label>Message Preview</label>
+      <div class="notif-preview">
+        <div class="noti-from">DSTSE · Lecture Alert · <span id="n_time"></span></div>
+        <div class="noti-title" id="n_preview_title">📚 Operating Systems — Lecture Update</div>
+        <div id="n_preview_body">Dear students, today's lecture for Operating Systems (08:00–10:00) has been cancelled due to severe rainfall on the Kampala morning routes. We apologize for the inconvenience. The lecture will be rescheduled — watch this space for updates.</div>
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-bottom:1rem">
+      <label>Send Via</label>
+      <div class="notif-channels">
+        <div class="channel-toggle active" onclick="toggleChannel(this)">📱 WhatsApp</div>
+        <div class="channel-toggle active" onclick="toggleChannel(this)">📧 Email</div>
+        <div class="channel-toggle" onclick="toggleChannel(this)">💬 SMS</div>
+        <div class="channel-toggle" onclick="toggleChannel(this)">🔔 App Push</div>
+        <div class="channel-toggle" onclick="toggleChannel(this)">📌 Canvas LMS</div>
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-bottom:1.25rem">
+      <label>Recipients</label>
+      <div class="recipients-row">
+        <div class="recipient-chip">All Enrolled (34)</div>
+        <div class="recipient-chip">Day Students</div>
+        <div class="recipient-chip">Evening Students</div>
+      </div>
+    </div>
+
+    <div class="send-row">
+      <button class="btn-primary" onclick="sendNotification()">📢 Send Now</button>
+      <button class="btn-secondary" onclick="showToast('✓ Notification scheduled for 5:00 PM','info')">Schedule for 5 PM</button>
+      <div style="margin-left:auto;font-size:12px;color:var(--ink3)">Last sent: Yesterday 5:03 PM</div>
+    </div>
+  </div>
+
+  <!-- SENT LOG -->
+  <div class="section-card">
+    <div class="sc-header"><h3>Recent Notifications Sent</h3></div>
+    <div class="sc-body" style="padding:0">
+      <table class="history-table">
+        <thead><tr><th>Course</th><th>Message</th><th>Recipients</th><th>Sent</th><th>Status</th></tr></thead>
+        <tbody id="notifLog">
+          <tr><td>Oper. Systems</td><td>Cancelled — heavy rain</td><td>34</td><td>Mon 5:02 PM</td><td><span class="status-pill pill-green">Delivered</span></td></tr>
+          <tr><td>Database Sys.</td><td>Confirmed — proceeding</td><td>28</td><td>Sun 5:00 PM</td><td><span class="status-pill pill-green">Delivered</span></td></tr>
+          <tr><td>Data Structures</td><td>Rescheduled to Friday</td><td>31</td><td>Fri 4:58 PM</td><td><span class="status-pill pill-green">Delivered</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE: HISTORY ===== -->
+<div class="page" id="page-history">
+  <div class="page-title">
+    <h2>History & Insights</h2>
+    <p>Model performance, past decisions, and feedback loop for continuous improvement</p>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="s-label">Total Decisions</div><div class="s-val">47</div><div class="s-sub">This semester</div></div>
+    <div class="stat-card"><div class="s-label">Model Accuracy</div><div class="s-val">91%</div><div class="s-sub"><span class="s-up">+3%</span> from last month</div></div>
+    <div class="stat-card"><div class="s-label">Feedback Collected</div><div class="s-val">19</div><div class="s-sub">For supervised learning</div></div>
+    <div class="stat-card"><div class="s-label">Hours Saved</div><div class="s-val">12h</div><div class="s-sub">Estimated</div></div>
+  </div>
+
+  <div class="section-card">
+    <div class="sc-header"><h3>Recent Decisions</h3></div>
+    <div class="sc-body" style="padding:0">
+      <table class="history-table">
+        <thead><tr><th>Date</th><th>Course</th><th>Decision</th><th>Actual</th><th>Feedback</th></tr></thead>
+        <tbody>
+          <tr class="highlight-row"><td>Mon Apr 28</td><td>Operating Systems</td><td><span class="status-pill pill-red">Cancelled</span></td><td>Cancelled ✓</td><td><span class="status-pill pill-green">Correct</span></td></tr>
+          <tr><td>Thu Apr 24</td><td>Database Systems</td><td><span class="status-pill pill-green">Scheduled</span></td><td>Held ✓</td><td><span class="status-pill pill-green">Correct</span></td></tr>
+          <tr><td>Tue Apr 22</td><td>Data Structures</td><td><span class="status-pill pill-orange">Rescheduled</span></td><td>Rescheduled ✓</td><td><span class="status-pill pill-green">Correct</span></td></tr>
+          <tr><td>Mon Apr 21</td><td>Computer Networks</td><td><span class="status-pill pill-blue">Online</span></td><td>Held in-class</td><td><span class="status-pill pill-amber">Overcautious</span></td></tr>
+          <tr><td>Thu Apr 17</td><td>Operating Systems</td><td><span class="status-pill pill-green">Scheduled</span></td><td>Held ✓</td><td><span class="status-pill pill-green">Correct</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="sc-header"><h3>Model Notes</h3></div>
+    <div class="sc-body">
+      <p style="font-size:13px;color:var(--ink2);line-height:1.7">The Bayesian Network (BN) core is static and not updated by feedback — it encodes structured domain knowledge about Kampala weather patterns, road conditions, and lecture disruption probabilities. Feedback from lecturers is used to fine-tune the supervised classification layer, improving edge-case predictions over time. Both layers complement each other for more robust decisions.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE: SETTINGS ===== -->
+<div class="page" id="page-settings">
+  <div class="page-title">
+    <h2>Settings</h2>
+    <p>Configure your preferences, timetable and notification schedule</p>
+  </div>
+  <div class="section-card">
+    <div class="sc-header"><h3>Lecturer Profile</h3></div>
+    <div class="sc-body">
+      <div class="analysis-grid two-col" style="margin-bottom:1rem">
+        <div class="form-group"><label>Name</label><input type="text" value="Dr. Nakato Amara"></div>
+        <div class="form-group"><label>Department</label><input type="text" value="Computer Science, Makerere"></div>
+        <div class="form-group"><label>Email</label><input type="email" value="n.amara@mak.ac.ug"></div>
+        <div class="form-group"><label>Default Route</label><select><option>Bombo Road</option><option>Northern Bypass</option><option>Sir Apolo Road</option></select></div>
+      </div>
+      <button class="btn-primary" onclick="showToast('✓ Profile saved','success')">Save Profile</button>
+    </div>
+  </div>
+  <div class="section-card">
+    <div class="sc-header"><h3>Notification Schedule</h3></div>
+    <div class="sc-body">
+      <p style="font-size:13px;color:var(--ink2);margin-bottom:1rem">DSTSE will automatically analyze your next day's lectures and send alerts at the configured time.</p>
+      <div class="analysis-grid two-col" style="margin-bottom:1rem">
+        <div class="form-group"><label>Daily Alert Time</label><input type="time" value="17:00"></div>
+        <div class="form-group"><label>Days Active</label><select><option>Monday–Friday</option><option>Mon, Tue, Wed, Thu</option><option>All days</option></select></div>
+      </div>
+      <button class="btn-primary" onclick="showToast('✓ Schedule saved — alerts at 5:00 PM daily','success')">Save Schedule</button>
+    </div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<!-- FEEDBACK MODAL -->
+<div class="modal-overlay" id="feedbackModal" style="display:none" onclick="if(event.target===this)closeFeedback()">
+  <div class="modal">
+    <h3>What actually happened?</h3>
+    <p>Your feedback improves the model's future predictions. The Bayesian core stays fixed, but supervised layers learn from your input.</p>
+    <div class="feedback-opts">
+      <div class="feedback-opt" onclick="selectFeedback(this,'correct')"><span class="feedback-icon">✅</span> Decision was correct — outcome matched</div>
+      <div class="feedback-opt" onclick="selectFeedback(this,'overcautious')"><span class="feedback-icon">⚡</span> Too cautious — lecture could have proceeded</div>
+      <div class="feedback-opt" onclick="selectFeedback(this,'underestimated')"><span class="feedback-icon">🌧️</span> Underestimated disruption — worse than predicted</div>
+      <div class="feedback-opt" onclick="selectFeedback(this,'other')"><span class="feedback-icon">💬</span> Other — I'll add a note</div>
+    </div>
+    <div class="form-group" style="margin-bottom:1.25rem">
+      <label>Optional note</label>
+      <input type="text" placeholder="e.g. Students were present despite rain...">
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeFeedback()">Cancel</button>
+      <button class="btn-primary" onclick="submitFeedback()">Submit Feedback</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ========== DATA ==========
+const LECTURES = [
+  {id:1, time:'08:00',end:'10:00',course:'Operating Systems',room:'CS-201',students:34,road:'Bombo Road',status:'at-risk',importance:'Important'},
+  {id:2, time:'10:00',end:'12:00',course:'Database Systems',room:'CS-105',students:28,road:'University Road',status:'ok',importance:'Normal'},
+  {id:3, time:'14:00',end:'16:00',course:'Data Structures',room:'CS-301',students:31,road:'Northern Bypass',status:'ok',importance:'Normal'},
+  {id:4, time:'16:30',end:'18:00',course:'Computer Networks',room:'CS-204',students:22,road:'Sir Apolo Road',status:'at-risk',importance:'Important'},
+];
+
+const RESCHEDULE_OPTS = [
+  {day:'Tuesday, May 6',time:'10:00 – 12:00',tags:['Low rain risk','Free slot','Exam window clear'],score:'Best'},
+  {day:'Wednesday, May 7',time:'14:00 – 16:00',tags:['Moderate risk','Alternate slot'],score:'Good'},
+  {day:'Friday, May 9',time:'08:00 – 10:00',tags:['High attendance hist.','Weekend risk'],score:'Fair'},
+];
+
+let currentDayOffset = 0;
+let lastDecision = null;
+let selectedFeedbackOpt = null;
+let selectedReschedule = 0;
+
+// ========== INIT ==========
+function init(){
+  const now = new Date();
+  document.getElementById('topDate').textContent = now.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+  document.getElementById('fullDate').textContent = now.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  setNavDate();
+  renderLectures();
+
+  // set analysis defaults
+  const d = new Date(); d.setMinutes(0,0,0);
+  document.getElementById('a_datetime').value = d.toISOString().slice(0,16);
+  document.getElementById('n_time').textContent = now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+}
+
+function setNavDate(){
+  const d = new Date();
+  d.setDate(d.getDate() + currentDayOffset);
+  const label = currentDayOffset===0 ? 'Today, ' : currentDayOffset===1 ? 'Tomorrow, ' : '';
+  document.getElementById('navDate').textContent = label + d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+}
+
+function shiftDay(delta){
+  currentDayOffset += delta;
+  setNavDate();
+  renderLectures();
+}
+
+function renderLectures(){
+  const list = document.getElementById('lectureList');
+  list.innerHTML = '';
+  const now = new Date();
+  const nowMins = now.getHours()*60+now.getMinutes();
+
+  LECTURES.forEach((lec,i)=>{
+    const [h,m] = lec.time.split(':').map(Number);
+    const lecMins = h*60+m;
+    const isNext = currentDayOffset===0 && i===0 && lecMins > nowMins - 30;
+    const isPast = currentDayOffset===0 && lecMins+120 < nowMins;
+
+    let pillHtml = '';
+    if(isPast) pillHtml = '<span class="status-pill pill-gray">Past</span>';
+    else if(lec.status==='at-risk') pillHtml = '<span class="status-pill pill-orange">At Risk</span>';
+    else pillHtml = '<span class="status-pill pill-green">On Track</span>';
+
+    const row = document.createElement('div');
+    row.className = 'lecture-row' + (isNext?' next-up':'') + (isPast?' highlight-row':'');
+    row.innerHTML = `
+      <div class="time-col">
+        <div class="time">${lec.time}</div>
+        <div class="dur">${lec.end}</div>
+      </div>
+      <div class="lec-info">
+        <div class="course-name">${lec.course} ${isNext?'<span class="next-badge">NEXT</span>':''}</div>
+        <div class="meta">
+          <span>🏛 ${lec.room}</span>
+          <span>👥 ${lec.students} students</span>
+          <span>🛣 ${lec.road}</span>
+          <span>⭐ ${lec.importance}</span>
+        </div>
+      </div>
+      <div class="lec-actions">
+        ${pillHtml}
+        <button class="btn-analyze" onclick="loadLectureToAnalyze(${i})">Analyze →</button>
+      </div>
+    `;
+    list.appendChild(row);
+  });
+}
+
+function loadLectureToAnalyze(idx){
+  const lec = LECTURES[idx];
+  switchPage('analyze', null);
+  const nav = document.querySelectorAll('.nav-item');
+  nav.forEach(n=>n.classList.remove('active'));
+  nav[1].classList.add('active');
+
+  document.getElementById('a_road').value = lec.road;
+  document.getElementById('a_importance').value = lec.importance;
+  document.getElementById('a_course').value = lec.course;
+  const d = new Date(); d.setHours(parseInt(lec.time),0,0,0);
+  document.getElementById('a_datetime').value = d.toISOString().slice(0,16);
+}
+
+// ========== ANALYSIS ==========
+async function runAnalysis(){
+  const btn = document.getElementById('analyzeBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> Computing...';
+
+  document.getElementById('analysisResult').style.display = 'block';
+  document.getElementById('resultLoading').style.display = 'block';
+  document.getElementById('resultContent').style.display = 'none';
+
+  const payload = {
+    datetime: document.getElementById('a_datetime').value,
+    road_name: document.getElementById('a_road').value,
+    dry_bulb: parseFloat(document.getElementById('a_dry').value),
+    wet_bulb: parseFloat(document.getElementById('a_wet').value),
+    humidity: parseFloat(document.getElementById('a_humidity').value),
+    wind_speed: parseFloat(document.getElementById('a_wind').value),
+    importance: document.getElementById('a_importance').value
+  };
+
+  try {
+    const res = await fetch('https://fkwitty8-dstse-decision.hf.space/predict_decision',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+    if(!res.ok) throw new Error('Server error '+res.status);
+    const data = await res.json();
+    lastDecision = data;
+    renderResult(data);
+  } catch(err) {
+    document.getElementById('resultLoading').style.display = 'none';
+    document.getElementById('resultContent').style.display = 'block';
+    document.getElementById('resultDecision').innerHTML = '<span style="color:var(--danger)">⚠️ Could not reach prediction server</span>';
+    document.getElementById('probBars').innerHTML = '<div style="font-size:13px;color:var(--ink3)">'+err.message+'</div>';
+    document.getElementById('resultExplanation').textContent = 'Please check your network connection or try again.';
+    document.getElementById('btnNotifyFromResult').style.display='none';
+    document.getElementById('btnReschedule').style.display='none';
+    document.getElementById('btnMeet').style.display='none';
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '<span>Analyze Lecture</span>';
+}
+
+function renderResult(data){
+  document.getElementById('resultLoading').style.display = 'none';
+  document.getElementById('resultContent').style.display = 'block';
+
+  const COLORS = {Scheduled:'#2e9c4a',Online:'#0f52ba',Rescheduled:'#e07b39',Cancelled:'#c0392b'};
+  const ICONS = {Scheduled:'✅',Online:'📹',Rescheduled:'📅',Cancelled:'❌'};
+  const dec = data.decision;
+  const col = COLORS[dec] || '#555';
+  document.getElementById('resultDecision').innerHTML =
+    `<span style="color:${col}">${ICONS[dec]||''} Decision: ${dec}</span>`;
+
+  const bars = document.getElementById('probBars');
+  bars.innerHTML = '';
+  for(const [key,val] of Object.entries(data.probabilities||{})){
+    const pct = (val*100).toFixed(1);
+    const barCol = COLORS[key]||'#888';
+    bars.innerHTML += `
+      <div class="prob-bar-row">
+        <label>${key}</label>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${barCol}"></div></div>
+        <span style="font-size:12px;font-weight:500;color:${barCol}">${pct}%</span>
+      </div>`;
+  }
+
+  document.getElementById('resultExplanation').innerHTML = data.explanation || 'No explanation provided.';
+
+  document.getElementById('btnNotifyFromResult').style.display = 'flex';
+  document.getElementById('btnReschedule').style.display = (dec==='Rescheduled'||dec==='Cancelled') ? 'flex' : 'none';
+  document.getElementById('btnMeet').style.display = (dec==='Online') ? 'flex' : 'none';
+}
+
+function prefillFromTimetable(){
+  const lec = LECTURES[0];
+  document.getElementById('a_road').value = lec.road;
+  document.getElementById('a_importance').value = lec.importance;
+  document.getElementById('a_course').value = lec.course;
+  showToast('✓ Loaded from next lecture: '+lec.course,'info');
+}
+
+// ========== NOTIFICATIONS ==========
+const NOTIFY_MSGS = {
+  cancelled: {
+    title:'Lecture Cancelled — {course}',
+    body:'Dear students, the {time} lecture for {course} has been cancelled due to severe Kampala rainfall and high traffic disruption. A reschedule notice will follow shortly. We apologize for the short notice.'
+  },
+  online: {
+    title:'Lecture Moving Online — {course}',
+    body:'Dear students, due to adverse weather conditions, the {time} {course} lecture will be conducted online. Please find the meeting link below. Ensure you have a stable connection. Recording will be shared.'
+  },
+  rescheduled: {
+    title:'Lecture Rescheduled — {course}',
+    body:'Dear students, the {course} lecture originally scheduled for {time} has been rescheduled. Please check your updated timetable on the portal. We appreciate your understanding.'
+  },
+  confirmed: {
+    title:'Lecture Confirmed — {course}',
+    body:'Dear students, the {time} lecture for {course} is confirmed and will proceed as scheduled. Weather has been assessed and conditions are acceptable. See you in class!'
+  }
+};
+
+function updateCompose(){
+  const course = document.getElementById('n_course').value;
+  const status = document.getElementById('n_status').value;
+  const msg = NOTIFY_MSGS[status];
+  const time = '08:00–10:00';
+  document.getElementById('n_preview_title').textContent = '📚 ' + msg.title.replace('{course}',course);
+  document.getElementById('n_preview_body').textContent = msg.body.replace(/{course}/g,course).replace(/{time}/g,time);
+}
+
+function autoCompose(){
+  if(lastDecision){
+    const map = {Scheduled:'confirmed',Online:'online',Rescheduled:'rescheduled',Cancelled:'cancelled'};
+    document.getElementById('n_status').value = map[lastDecision.decision] || 'confirmed';
+  }
+  updateCompose();
+  showToast('✨ Composed based on last analysis','info');
+}
+
+function openNotifyFromResult(){
+  if(lastDecision){
+    const map = {Scheduled:'confirmed',Online:'online',Rescheduled:'rescheduled',Cancelled:'cancelled'};
+    document.getElementById('n_status').value = map[lastDecision.decision] || 'confirmed';
+    document.getElementById('n_course').value = document.getElementById('a_course').value;
+    updateCompose();
+  }
+  switchPage('notify', document.querySelectorAll('.nav-item')[2]);
+}
+
+function toggleChannel(el){
+  el.classList.toggle('active');
+}
+
+function sendNotification(){
+  const course = document.getElementById('n_course').value;
+  const status = document.getElementById('n_status').value;
+  const log = document.getElementById('notifLog');
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+
+  const statusLabels = {cancelled:'Cancelled — heavy rain',online:'Moving online',rescheduled:'Rescheduled',confirmed:'Confirmed — proceeding'};
+  const row = `<tr><td>${course}</td><td>${statusLabels[status]}</td><td>34</td><td>Today ${timeStr}</td><td><span class="status-pill pill-green">Delivered</span></td></tr>`;
+  log.insertAdjacentHTML('afterbegin', row);
+  showToast('📢 Notification sent to 34 students','success');
+}
+
+// ========== MEETING LINK ==========
+function generateMeetLink(){
+  const platform = document.getElementById('meetPlatform').value;
+  const course = document.getElementById('meetCourse').value;
+  const links = {'Google Meet':'meet.google.com/','Zoom':'zoom.us/j/','Microsoft Teams':'teams.microsoft.com/l/'};
+  const codes = ['abc-defg-hij','xzq-mnpr-vwt','jkl-uvwx-yz'];
+  const code = codes[Math.floor(Math.random()*codes.length)];
+  const logos = {'Google Meet':'📹','Zoom':'🎥','Microsoft Teams':'💻'};
+
+  document.getElementById('meetLinkResult').style.display = 'block';
+  document.getElementById('meetLogo').textContent = logos[platform];
+  document.getElementById('meetTitle').textContent = `${course} — Online Session`;
+  document.getElementById('meetLinkText').textContent = links[platform] + code;
+  showToast('✓ Meeting link generated','success');
+}
+
+function showMeetGen(){
+  document.getElementById('meetSection').style.display = 'block';
+  document.getElementById('reschedSection').style.display = 'none';
+}
+
+// ========== RESCHEDULE ==========
+function showReschedule(){
+  document.getElementById('reschedSection').style.display = 'block';
+  document.getElementById('meetSection').style.display = 'none';
+  renderReschedOptions();
+}
+
+function renderReschedOptions(){
+  const grid = document.getElementById('reschedGrid');
+  grid.innerHTML = '';
+  RESCHEDULE_OPTS.forEach((opt,i)=>{
+    const tagsHtml = opt.tags.map(t=>`<span class="score-tag tag-${i===0?'green':i===1?'amber':'blue'}">${t}</span>`).join('');
+    const div = document.createElement('div');
+    div.className = 'sched-option' + (i===0?' selected':'');
+    div.onclick = ()=>{document.querySelectorAll('.sched-option').forEach(el=>el.classList.remove('selected'));div.classList.add('selected');selectedReschedule=i;};
+    div.innerHTML = `<div class="score-badge">${opt.score}</div><div class="day">${opt.day}</div><div class="time-range">${opt.time}</div><div class="score-row">${tagsHtml}</div>`;
+    grid.appendChild(div);
+  });
+}
+
+function confirmReschedule(){
+  const opt = RESCHEDULE_OPTS[selectedReschedule];
+  document.getElementById('n_status').value = 'rescheduled';
+  updateCompose();
+  document.getElementById('reschedSection').style.display = 'none';
+  showToast(`📅 Rescheduled to ${opt.day} ${opt.time}. Notifying students...`,'success');
+}
+
+// ========== FEEDBACK ==========
+function openFeedback(){document.getElementById('feedbackModal').style.display='flex';}
+function closeFeedback(){document.getElementById('feedbackModal').style.display='none';selectedFeedbackOpt=null;}
+function selectFeedback(el,val){
+  document.querySelectorAll('.feedback-opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedFeedbackOpt = val;
+}
+function submitFeedback(){
+  if(!selectedFeedbackOpt){showToast('Please select an outcome','warn');return;}
+  closeFeedback();
+  showToast('✓ Feedback recorded — model will improve','success');
+}
+
+// ========== PAGE NAV ==========
+function switchPage(name, navEl){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  if(navEl){
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+    navEl.classList.add('active');
+  }
+}
+
+// ========== TOAST ==========
+function showToast(msg, type='info'){
+  const existing = document.querySelector('.toast');
+  if(existing) existing.remove();
+
+  const col = {success:'#2e9c4a',warn:'#d68910',info:'var(--accent)',danger:'#c0392b'}[type]||'var(--ink)';
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.style.background = col;
+  t.innerHTML = `<span>${msg}</span>`;
+  document.body.appendChild(t);
+  setTimeout(()=>{if(t.parentNode)t.remove();},3500);
+}
+
+init();
+</script>
+</body>
+</html>
+

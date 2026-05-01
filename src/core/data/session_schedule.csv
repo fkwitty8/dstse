@@ -1,0 +1,3 @@
+SessionID,CourseUnitID,Date,ActualStartTime,Status,StatusReason,SessionLink,NotificationSent
+1,BSE 3214 Cloud Computing and Big Data,2023-09-05,08:00,Online,System Generated,https://meet.university.edu/lecture_L001,False
+2,BSE 3211 Software Testing and Verification,2023-09-05,10:00,Online,System Generated,https://meet.university.edu/lecture_L002,False
